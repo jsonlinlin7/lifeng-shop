@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lifeng.shopserver.mapper.GoodsMapper">
+    <resultMap id="goodsMap" type="com.lifeng.shopserver.pojo.entry.Goods">
+        <id column="goodsid" jdbcType="BIGINT" property="goodsid" />
+        <result column="goodsname" jdbcType="VARCHAR" property="goodsname" />
+        <result column="category" jdbcType="VARCHAR" property="category"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+        <result column="details" jdbcType="VARCHAR" property="details"/>
+    </resultMap>
+    <select id="selectGoodsByGoodsid" resultMap="goodsMap">
+        select * from goods where goodsid = #{goodsid} ;
+    </select>
+    <select id="selectGoodsByCategory" resultMap="goodsMap">
+        select * from goods where category=#{category};
+    </select>
+
+    <select id="selectGoodsByDetails" resultMap="goodsMap">
+        select * from goods where details=#{details} and goodsname like concat("%",#{goodsname},"%");
+    </select>
+
+    <select id="searchGoods" resultMap="goodsMap">
+        select * from goods where goodsname like concat("%",#{params},"%");
+    </select>
+
+
+</mapper>

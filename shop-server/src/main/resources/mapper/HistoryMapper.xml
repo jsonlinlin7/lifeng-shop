@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lifeng.shopserver.mapper.HistoryMapper">
+    <resultMap id="historyItem" type="com.lifeng.shopserver.pojo.entry.History">
+        <result column="date" property="date" javaType="String"/>
+        <result column="catagory" jdbcType="VARCHAR" property="category" javaType="String"/>
+        <result column="userid" jdbcType="BIGINT" property="userid" javaType="int"/>
+        <result column="goodsid" jdbcType="BIGINT" property="goodsid" javaType="int"/>
+        <association property="goods" column="goodsid" select="com.lifeng.shopserver.mapper.GoodsMapper.selectGoodsByGoodsid"/>
+    </resultMap>
+    <insert id="insertHistory" parameterType="com.lifeng.shopserver.pojo.entry.History">
+        insert into history(date,catagory,userid,goodsid)
+        values(#{date},
+               #{category, jdbcType=VARCHAR},
+               #{userid, jdbcType=BIGINT},
+               #{goodsid, jdbcType=BIGINT});
+    </insert>
+    <select id="selectHistory" resultMap="historyItem">
+        select date, catagory, userid, goodsid from history where userid=#{userid} limit #{init}, 30;
+    </select>
+    <select id="selectAllCount" resultType="Integer">
+        select count(*) from history where userid=#{userid}
+    </select>
+    <delete id="deleteHistoryByDateList">
+        delete from history where userid = #{userid}
+        and date in
+        <foreach collection="dateList" item="date" open="(" separator="," close=")">
+            #{date}
+        </foreach>
+        ;
+    </delete>
+</mapper>
